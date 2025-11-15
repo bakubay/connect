@@ -1,316 +1,359 @@
-Welcome to your new TanStack app! 
+# Connect - Creator-Brand Collaboration Platform
 
-# Getting Started
+A modern, AI-powered platform that connects brands with content creators for partnership opportunities. Built with React, TypeScript, TanStack Router, and Convex.
 
-To run this application:
+## 🎯 Overview
+
+Connect is a full-stack application that facilitates collaboration between companies and content creators. Companies can create campaigns seeking creator partnerships, while creators can browse opportunities, apply with video submissions, and get AI-powered fit scores. The platform includes role-based access control, automated application scoring, and partnership management.
+
+## ✨ Features
+
+### For Companies
+- **Campaign Management**: Create and manage creator partnership campaigns with detailed requirements, budgets, and deadlines
+- **Applicant Review**: View and review creator applications with AI-powered fit scores and rankings
+- **Partnership Tracking**: Manage partnerships from selection through completion
+- **AI-Powered Insights**: Get AI-powered insights on campaign effectiveness
+
+### For Creators
+- **Profile Creation**: Build comprehensive creator profiles with bio, social media links, and portfolio information
+- **Campaign Discovery**: Browse active campaigns and filter by criteria
+- **Application System**: Submit video applications directly to campaigns
+- **AI Fit Scoring**: Receive instant feedback on how well your profile matches campaign requirements
+- **Partnership Management**: Track application status and manage active partnerships
+
+### AI Features
+- **Application Fit Scoring**: Automatically scores creator applications against campaign requirements using GPT-4o-mini
+- **Profile Builder Assistant**: AI helps creators build compelling profiles (coming soon)
+- **Campaign Optimization**: AI suggestions for better campaign descriptions (coming soon)
+- **Partnership Negotiation**: AI-powered negotiation assistance (coming soon)
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **TanStack Router** - File-based routing with type safety
+- **Tailwind CSS** - Utility-first styling
+- **shadcn/ui** - Component library
+- **Vite** - Build tool and dev server
+- **Lucide React** - Icon library
+
+### Backend
+- **Convex** - Backend-as-a-Service (database, auth, real-time)
+- **Convex Auth** - Authentication system
+- **Convex Agent** - AI agent framework
+- **OpenAI** - AI capabilities (GPT-4o-mini)
+
+### Development Tools
+- **Biome** - Linting and formatting
+- **Vitest** - Testing framework
+- **TanStack Devtools** - Development tools
+
+## 📋 Prerequisites
+
+- **Node.js** 18+ and **pnpm** 10.20.0+
+- **Convex account** - Sign up at [convex.dev](https://www.convex.dev)
+- **OpenAI API key** - For AI features (optional but recommended)
+
+## 🚀 Getting Started
+
+### 1. Clone and Install
 
 ```bash
+git clone <repository-url>
+cd connect
 pnpm install
-pnpm start
 ```
 
-# Building For Production
-
-To build this application for production:
+### 2. Set Up Convex
 
 ```bash
+# Initialize Convex (if not already done)
+npx convex init
+
+# Start Convex development server
+pnpm convex dev
+```
+
+This will:
+- Create a `.env.local` file with `VITE_CONVEX_URL` and `CONVEX_DEPLOYMENT`
+- Start the Convex development server
+- Set up your Convex deployment
+
+### 3. Configure Environment Variables
+
+Create or update `.env.local`:
+
+```bash
+VITE_CONVEX_URL=https://your-deployment.convex.cloud
+CONVEX_DEPLOYMENT=your-deployment-name
+```
+
+### 4. Set Up OpenAI (Optional)
+
+For AI features to work, set your OpenAI API key in Convex:
+
+```bash
+npx convex env set OPENAI_API_KEY your_openai_api_key_here
+```
+
+### 5. Start Development Server
+
+```bash
+# In a separate terminal
+pnpm dev
+```
+
+The application will be available at `http://localhost:3000`
+
+## 📁 Project Structure
+
+```
+connect/
+├── convex/                 # Backend (Convex functions)
+│   ├── _generated/        # Auto-generated Convex types
+│   ├── ai/                # AI features
+│   │   ├── fitScoringAgent.ts
+│   │   ├── scoreApplication.ts
+│   │   └── scoringSchema.ts
+│   ├── applications.ts    # Application queries/mutations
+│   ├── auth.ts            # Auth configuration
+│   ├── campaigns.ts       # Campaign queries/mutations
+│   ├── creatorProfiles.ts # Creator profile functions
+│   ├── partnerships.ts    # Partnership management
+│   ├── schema.ts         # Database schema
+│   └── users.ts          # User management
+├── src/
+│   ├── components/        # React components
+│   │   ├── ui/           # shadcn/ui components
+│   │   ├── ApplicationForm.tsx
+│   │   ├── CampaignBrowser.tsx
+│   │   ├── CampaignForm.tsx
+│   │   ├── CreatorProfileForm.tsx
+│   │   └── ...
+│   ├── routes/           # TanStack Router routes
+│   │   ├── __root.tsx    # Root layout
+│   │   ├── index.tsx     # Landing page
+│   │   ├── signin.tsx    # Authentication
+│   │   ├── campaigns/    # Campaign routes
+│   │   ├── profile/      # Profile routes
+│   │   └── ...
+│   ├── lib/              # Utility functions
+│   ├── integrations/     # Third-party integrations
+│   └── main.tsx         # Entry point
+├── public/               # Static assets
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
+```
+
+## 🔐 Authentication
+
+The application uses **Convex Auth** with password-based authentication. Users can sign up as either:
+- **Company** - Can create campaigns and review applicants
+- **Creator** - Can browse campaigns and submit applications
+
+### Authentication Flow
+
+1. Users visit `/signin` to sign up or sign in
+2. On signup, users select their role (company or creator)
+3. Authenticated users are redirected based on their role:
+   - Companies → `/campaigns`
+   - Creators → `/profile/creator` (if profile incomplete) or `/browse` (if complete)
+
+See [AUTH_SETUP.md](./AUTH_SETUP.md) for detailed authentication documentation.
+
+## 🗄️ Database Schema
+
+### Core Tables
+
+- **users** - User accounts with role (company/creator)
+- **campaigns** - Brand partnership campaigns
+- **creatorProfiles** - Creator profile information
+- **applications** - Creator applications to campaigns
+- **partnerships** - Active partnerships between companies and creators
+
+See `convex/schema.ts` for the complete schema definition.
+
+## 🛣️ Routing
+
+The application uses **TanStack Router** with file-based routing:
+
+- `/` - Landing page (public)
+- `/signin` - Sign in/sign up (public)
+- `/campaigns` - Campaign list (company only)
+- `/campaigns/new` - Create campaign (company only)
+- `/campaigns/:campaignId` - Campaign details
+- `/campaigns/:campaignId/applicants` - View applicants (company only)
+- `/campaigns/:campaignId/apply` - Apply to campaign (creator only)
+- `/browse` - Browse campaigns (creator only)
+- `/profile/creator` - Creator profile management
+- `/my-applications` - View own applications (creator only)
+- `/dashboard` - User dashboard
+
+Routes are protected using the `Authenticated` component from Convex and role-based guards.
+
+## 🤖 AI Features
+
+### Application Fit Scoring
+
+When a creator submits an application, an AI agent automatically:
+1. Analyzes the creator's profile (bio, social media)
+2. Reviews the application content
+3. Compares against campaign requirements
+4. Generates a fit score (0-100) with detailed reasoning
+
+The score includes:
+- Overall fit score
+- Strengths (1-5 points)
+- Concerns (0-5 points)
+- Recommendation tier
+
+See `convex/ai/README.md` for detailed AI documentation.
+
+## 🎨 UI Components
+
+The project uses **shadcn/ui** components. To add new components:
+
+```bash
+pnpx shadcn@latest add component-name
+```
+
+Available components include:
+- Button, Card, Input, Label, Textarea
+- Alert, Badge, Separator, Sheet
+- Skeleton (loading states)
+
+## 🧪 Development
+
+### Available Scripts
+
+```bash
+# Development
+pnpm dev              # Start Vite dev server (port 3000)
+pnpm convex dev       # Start Convex dev server
+
+# Building
+pnpm build            # Build for production
+pnpm serve            # Preview production build
+
+# Code Quality
+pnpm lint             # Run Biome linter
+pnpm format           # Format code with Biome
+pnpm check            # Run all Biome checks
+
+# Testing
+pnpm test             # Run Vitest tests
+```
+
+### Code Style
+
+The project uses **Biome** for linting and formatting. Configuration is in `biome.json`.
+
+### Type Safety
+
+- **TypeScript** for type checking
+- **Convex** generates types from schema (`convex/_generated/dataModel.d.ts`)
+- **TanStack Router** provides type-safe routing
+
+## 🚢 Deployment
+
+### Convex Deployment
+
+Convex automatically deploys when you push to your repository (if configured) or you can deploy manually:
+
+```bash
+npx convex deploy
+```
+
+### Frontend Deployment
+
+The project is configured for **Vercel** deployment (see `vercel.json`). To deploy:
+
+1. Connect your repository to Vercel
+2. Set environment variables:
+   - `VITE_CONVEX_URL`
+   - `CONVEX_DEPLOYMENT`
+3. Deploy
+
+The build process:
+1. Runs `pnpm build` (Vite build + TypeScript check)
+2. Serves the `dist/` directory
+
+## 📚 Key Concepts
+
+### Convex
+
+- **Queries**: Read data reactively with `useQuery(api.module.function)`
+- **Mutations**: Write data with `useMutation(api.module.function)`
+- **Actions**: Async operations (e.g., AI scoring)
+- **Real-time**: Data updates automatically in the UI
+
+### TanStack Router
+
+- **File-based routing**: Routes defined by file structure
+- **Type-safe**: Route params and search params are typed
+- **Layouts**: Shared layouts via `__root.tsx` and nested routes
+- **Loaders**: Pre-fetch data before route renders
+
+### Role-Based Access
+
+- Use `useUserRole()` hook to check user role
+- Use `<RoleGuard>` components for conditional rendering
+- Protect routes with `beforeLoad` hooks
+
+## 🔧 Troubleshooting
+
+### Convex Connection Issues
+
+```bash
+# Check Convex status
+npx convex status
+
+# Re-authenticate
+npx convex login
+
+# Check environment variables
+cat .env.local
+```
+
+### Build Errors
+
+```bash
+# Clear cache and reinstall
+rm -rf node_modules pnpm-lock.yaml
+pnpm install
+
+# Check TypeScript errors
 pnpm build
 ```
 
-## Testing
+### AI Features Not Working
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+1. Verify OpenAI API key is set: `npx convex env get OPENAI_API_KEY`
+2. Check Convex logs: `npx convex logs`
+3. Ensure you have OpenAI credits
 
-```bash
-pnpm test
-```
+## 📖 Documentation
 
-## Styling
+- [Convex Documentation](https://docs.convex.dev)
+- [TanStack Router Docs](https://tanstack.com/router/v1)
+- [Convex Auth Guide](https://labs.convex.dev/auth)
+- [shadcn/ui Components](https://ui.shadcn.com)
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## 🤝 Contributing
 
+1. Create a feature branch
+2. Make your changes
+3. Run `pnpm check` to ensure code quality
+4. Submit a pull request
 
-## Linting & Formatting
+## 📝 License
 
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
+[Add your license here]
 
+## 🙏 Acknowledgments
 
-```bash
-pnpm lint
-pnpm format
-pnpm check
-```
-
-
-## Setting up Convex
-
-- Set the `VITE_CONVEX_URL` and `CONVEX_DEPLOYMENT` environment variables in your `.env.local`. (Or run `npx convex init` to set them automatically.)
-- Run `npx convex dev` to start the Convex server.
-
-
-## Shadcn
-
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpx shadcn@latest add button
-```
-
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
-
-```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
-```
-
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
-
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-// ...
-
-const queryClient = new QueryClient();
-
-// ...
-
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-pnpm add @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+- Built with [Convex](https://www.convex.dev)
+- UI components from [shadcn/ui](https://ui.shadcn.com)
+- Routing by [TanStack Router](https://tanstack.com/router)
