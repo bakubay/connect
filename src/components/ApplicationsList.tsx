@@ -161,13 +161,6 @@ export function ApplicationsList() {
                     )}
                   </Card>
                 )}
-
-                {app.note && (
-                  <div className="bg-muted rounded-lg p-3">
-                    <p className="text-sm font-medium mb-1">Your Note</p>
-                    <p className="text-sm text-muted-foreground">{app.note}</p>
-                  </div>
-                )}
               </CardContent>
 
               <CardFooter className="border-t pt-4">

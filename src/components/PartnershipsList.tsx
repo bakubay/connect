@@ -1,7 +1,7 @@
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
-import { MessageCircle, User, TrendingUp, Handshake } from "lucide-react";
+import { MessageCircle, TrendingUp, Handshake } from "lucide-react";
 
 interface PartnershipsListProps {
   campaignId: Id<"campaigns">;

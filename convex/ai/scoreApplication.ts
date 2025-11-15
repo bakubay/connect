@@ -27,7 +27,7 @@ export const scoreApplication = internalAction({
       throw new Error("Application not found");
     }
 
-    const { campaign, profile, videoUrl } = application;
+    const { campaign, profile } = application;
 
     // Build context prompt for the AI
     const prompt: string = `

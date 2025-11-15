@@ -77,7 +77,7 @@ export function BioSelector({ options, selected, onSelect }: BioSelectorProps) {
       {options.map((option, index) => {
         const style = styleLabels[option.style];
         const isSelected = selected === option.text;
-        const colorClasses = {
+        const colorClasses: Record<string, string> = {
           blue: isSelected
             ? "border-blue-500 bg-blue-50"
             : "border-gray-200 hover:border-blue-300",

@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { CampaignList } from "../../components/CampaignList";
 import { Authenticated, Unauthenticated } from "convex/react";
 

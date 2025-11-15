@@ -9,7 +9,7 @@ import { AlertCircle, Briefcase } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import { Alert, AlertDescription } from "../components/ui/alert";
 
 export const Route = createFileRoute("/browse")({
   component: BrowsePage,
